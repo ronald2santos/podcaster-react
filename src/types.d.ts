@@ -14,4 +14,25 @@ type PodcastCard = {
     imgUrl: string;
 };
 
-export {PodcastServerList, PodcastCard}
+type PodcastServerData = {
+    artistName: string;
+    collectionName: string;
+    trackCount: number;
+    artworkUrl600: string;
+  };
+  
+  type EpisodeServerData = {
+    trackId: number;
+    trackName: string;
+    description: string;
+    releaseDate: string;
+    previewUrl: string;
+    trackTimeMillis: number;
+    artworkUrl600: string;
+  };
+
+  type PodcastParams = {
+    podcastId: string;
+  };
+
+export {PodcastServerList, PodcastCard, PodcastServerData, EpisodeServerData, PodcastParams}
