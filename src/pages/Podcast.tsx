@@ -70,6 +70,8 @@ const Podcast = () => {
             <EpisodeList
               episodeList={podcastEpisodes}
               episodeCount={podcastData.trackCount}
+              /// Added to get podcast data from localStorage for next view in Episode Page
+              podcastId={podcastId}
             />
           )}
         </div>

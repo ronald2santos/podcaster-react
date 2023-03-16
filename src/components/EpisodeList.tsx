@@ -1,7 +1,8 @@
 import { EpisodeList as EpisodeListType } from "../types";
 import { Link } from "react-router-dom";
 
-const EpisodeList = ({ episodeList, episodeCount }: EpisodeListType) => {
+// Added podcastId prop to get podcast data from localStorage for next view in Episode Page
+const EpisodeList = ({ episodeList, episodeCount, podcastId }: EpisodeListType) => {
   
   const formatDate = (releaseDate: string): string => Intl.DateTimeFormat("en-US").format(new Date(releaseDate));
   
@@ -37,6 +38,13 @@ const EpisodeList = ({ episodeList, episodeCount }: EpisodeListType) => {
                         to={`episode/${encodeURIComponent(episode.trackId)}`}
                         relative="path"
                         className="text-cyan-600"
+                        state={{
+                            episodeTitle: episode.trackName,
+                            episodeDescription: episode.description,
+                            episodeUrl: episode.previewUrl,
+                            // Passing it as state to get podcast data from localStorage in Episode page
+                            podcastId: podcastId
+                          }}
                       >
                         {episode.trackName}
                       </Link>

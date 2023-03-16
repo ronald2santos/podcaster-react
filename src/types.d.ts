@@ -40,6 +40,13 @@ type PodcastServerData = {
   type EpisodeList = {
     episodeList: EpisodeServerData[];
     episodeCount: number;
+    podcastId: string
   };
 
-export {PodcastServerList, PodcastCard, PodcastDetail, PodcastServerData, EpisodeServerData, EpisodeList, PodcastParams}
+  type EpisodeDetail = {
+    title: string;
+    description: string;
+    episodeUrl: string;
+  };
+
+export {PodcastServerList, PodcastCard, PodcastDetail, PodcastServerData, EpisodeServerData, EpisodeList, EpisodeDetail, PodcastParams}
