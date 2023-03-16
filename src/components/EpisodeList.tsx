@@ -5,6 +5,7 @@ const EpisodeList = ({ episodeList, episodeCount }: EpisodeListType) => {
   
   const formatDate = (releaseDate: string): string => Intl.DateTimeFormat("en-US").format(new Date(releaseDate));
   
+  // Comes in miliseconds
   const formatDuration = (durationMs: number): string => {
     const hours = (Math.floor(durationMs / 3600000) % 24).toString().padStart(2, "0");
     const minutes = (Math.floor(durationMs / 60000) % 60).toString().padStart(2, "0");

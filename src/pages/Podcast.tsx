@@ -14,6 +14,13 @@ const Podcast = () => {
   /// Description value is not available in podcast data and episode list endpoint, so passing it as state from podcast top100 list data
   const { state } = useLocation();
 
+  const getExpirationDate = () => {
+    const today = new Date();
+    const expirationDate = new Date();
+    expirationDate.setDate(today.getDate() + 1);
+    return expirationDate.toString();
+  };
+
   const getPodcastData = async () => {
     try {
       const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
@@ -21,6 +28,12 @@ const Podcast = () => {
       const data = JSON.parse(results.contents);
       const podcastArray = data.results;
       console.log(podcastArray);
+      const localPodcast = {
+        podcast: podcastArray,
+        description: state.description,
+        expirationDate: getExpirationDate(),
+      };
+      localStorage.setItem(podcastId, JSON.stringify(localPodcast));
       /// Podcast info data comes as the first element in the array of episodes
       setPodcastData(podcastArray[0]);
       /// We cut out the podcast data and we keep the episodes only
@@ -30,8 +43,17 @@ const Podcast = () => {
     }
   };
 
-  useEffect(() => {
-    getPodcastData();
+  useEffect(() => { 
+    const localPodcast = localStorage.getItem(podcastId);
+    const podcastExpirationDate = localPodcast ? JSON.parse(localPodcast).expirationDate : undefined;
+
+    if (localPodcast && new Date(podcastExpirationDate) > new Date()) {
+      const podcastArray = JSON.parse(localPodcast).podcast;
+      setPodcastData(podcastArray[0]);
+      setPodcastEpisodes(podcastArray.slice(1, podcastArray.length));
+    } else {
+        getPodcastData();
+    } 
   }, [podcastId]);
 
   return (
