@@ -6,4 +6,12 @@ type PodcastServerList = {
     id: Object<any>;
 };
 
-export {PodcastServerList}
+type PodcastCard = {
+    id: string;
+    title: string;
+    author: string;
+    description: string;
+    imgUrl: string;
+};
+
+export {PodcastServerList, PodcastCard}
