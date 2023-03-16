@@ -14,6 +14,8 @@ type PodcastCard = {
     imgUrl: string;
 };
 
+type PodcastDetail = Omit<PodcastCard, "id">
+
 type PodcastServerData = {
     artistName: string;
     collectionName: string;
@@ -35,4 +37,9 @@ type PodcastServerData = {
     podcastId: string;
   };
 
-export {PodcastServerList, PodcastCard, PodcastServerData, EpisodeServerData, PodcastParams}
+  type EpisodeList = {
+    episodeList: EpisodeServerData[];
+    episodeCount: number;
+  };
+
+export {PodcastServerList, PodcastCard, PodcastDetail, PodcastServerData, EpisodeServerData, EpisodeList, PodcastParams}
