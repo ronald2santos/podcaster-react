@@ -4,19 +4,15 @@ import { PodcastServerList } from "../types";
 
 const Home = () => {
   const allowOriginURL = "https://api.allorigins.win/get?url=";
-  const baseUrl =
-    "https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json";
+  const baseUrl = "https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json";
   const [top100Podcasts, setTop100Podcasts] = useState<PodcastServerList[]>([]);
 
   const getTopPodcasts = async () => {
     try {
-      const response = await fetch(
-        allowOriginURL + encodeURIComponent(baseUrl)
-      );
+      const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
       const results = await response.json();
       const data = JSON.parse(results.contents);
       const podcasts: PodcastServerList[] = data.feed.entry;
-      console.log(podcasts);
       setTop100Podcasts(podcasts);
       localStorage.setItem("topPodcasts", JSON.stringify(podcasts));
       localStorage.setItem("listExpirationDate", getExpirationDate());
@@ -32,6 +28,22 @@ const Home = () => {
     return expirationDate.toString();
   };
 
+  const filterPodcasts = (searchText: string) => {
+    const savedPodcasts: PodcastServerList[] = JSON.parse(localStorage.getItem("topPodcasts") || "[]");
+    if (searchText === "") {
+      setTop100Podcasts(savedPodcasts);
+    } else {
+      const filteredPodcasts: PodcastServerList[] = savedPodcasts.filter(
+        (podcast: any) => {
+          const title = podcast["im:name"].label.toLowerCase();
+          const author = podcast["im:artist"].label.toLowerCase();
+          return title.includes(searchText.toLowerCase()) || author.includes(searchText.toLowerCase())
+        }
+      );
+      setTop100Podcasts(filteredPodcasts);
+    }
+  };
+
   useEffect(() => {
     const expirationDateString = localStorage.getItem("listExpirationDate");
     if (expirationDateString && new Date(expirationDateString) > new Date()) {
@@ -45,6 +57,7 @@ const Home = () => {
       {!top100Podcasts ? null : (
         <div className="flex justify-end m-5 mb-24">
           <input
+            onChange={({ target }) => filterPodcasts(target.value)}
             className="pl-1"
             type="text"
             placeholder="Filter podcasts..."
