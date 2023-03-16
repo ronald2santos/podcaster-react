@@ -18,13 +18,26 @@ const Home = () => {
       const podcasts: PodcastServerList[] = data.feed.entry;
       console.log(podcasts);
       setTop100Podcasts(podcasts);
+      localStorage.setItem("topPodcasts", JSON.stringify(podcasts));
+      localStorage.setItem("listExpirationDate", getExpirationDate());
     } catch (error: any) {
       console.log(error);
     }
   };
 
+  const getExpirationDate = () => {
+    const today = new Date();
+    const expirationDate = new Date();
+    expirationDate.setDate(today.getDate() + 1);
+    return expirationDate.toString();
+  };
+
   useEffect(() => {
-    getTopPodcasts();
+    const expirationDateString = localStorage.getItem("listExpirationDate");
+    if (expirationDateString && new Date(expirationDateString) > new Date()) {
+      const savedPodcasts = JSON.parse(localStorage.getItem("topPodcasts") || "[]");
+      setTop100Podcasts(savedPodcasts);
+    } else { getTopPodcasts(); }
   }, []);
 
   return (
