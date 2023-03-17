@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import EpisodeList from "../components/EpisodeList";
 import PodcastDetail from "../components/PodcastDetail";
+import { useLoading } from "../context/loadingContext";
 import { EpisodeServerData, PodcastParams, PodcastServerData } from "../types";
 
 const Podcast = () => {
@@ -14,6 +15,8 @@ const Podcast = () => {
   /// Description value is not available in podcast data and episode list endpoint, so passing it as state from podcast top100 list data
   const { state } = useLocation();
 
+  const { setLoading } = useLoading();
+
   const getExpirationDate = () => {
     const today = new Date();
     const expirationDate = new Date();
@@ -23,11 +26,11 @@ const Podcast = () => {
 
   const getPodcastData = async () => {
     try {
+      setLoading(true);
       const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
       const results = await response.json();
       const data = JSON.parse(results.contents);
       const podcastArray = data.results;
-      console.log(podcastArray);
       const localPodcast = {
         podcast: podcastArray,
         description: state.description,
@@ -40,6 +43,8 @@ const Podcast = () => {
       setPodcastEpisodes(podcastArray.slice(1, podcastArray.length));
     } catch (error: any) {
       console.log(error);
+    } finally {
+      setLoading(false)
     }
   };
 

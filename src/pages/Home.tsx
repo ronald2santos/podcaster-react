@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PodcastListCard from "../components/PodcastListCard";
+import { useLoading } from "../context/loadingContext";
 import { PodcastServerList } from "../types";
 
 const Home = () => {
@@ -7,8 +8,11 @@ const Home = () => {
   const baseUrl = "https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json";
   const [top100Podcasts, setTop100Podcasts] = useState<PodcastServerList[]>([]);
 
+  const { setLoading } = useLoading();
+
   const getTopPodcasts = async () => {
     try {
+      setLoading(true);
       const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
       const results = await response.json();
       const data = JSON.parse(results.contents);
@@ -18,6 +22,8 @@ const Home = () => {
       localStorage.setItem("listExpirationDate", getExpirationDate());
     } catch (error: any) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
