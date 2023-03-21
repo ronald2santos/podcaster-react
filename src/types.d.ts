@@ -49,7 +49,12 @@ type EpisodeDetail = {
   episodeUrl: string;
 };
 
-type PodcastServer = (PodcastServerData | EpisodeServerData)[]
+type PodcastServer = (PodcastServerData | EpisodeServerData)[];
+
+type LocalStoragePodcast = {
+  podcast: PodcastServerData[];
+  description: string;
+};
 
 export {
   PodcastServerList,
@@ -60,5 +65,6 @@ export {
   EpisodeList,
   EpisodeDetail,
   PodcastParams,
-  PodcastServer
+  PodcastServer,
+  LocalStoragePodcast,
 };

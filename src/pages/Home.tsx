@@ -4,16 +4,17 @@ import { useLoading } from "../context/loadingContext";
 import { usePodcastList } from "../hooks/usePodcastList";
 
 const Home = () => {
-  const { top100Podcasts, filterPodcasts } = usePodcastList(TOP_PODCASTS_URL)
+  const { top100Podcasts, filterPodcasts } = usePodcastList(TOP_PODCASTS_URL);
   const { loading } = useLoading();
+
   return (
     <>
-    {console.log(top100Podcasts)}
       {!top100Podcasts || loading ? null : (
         <div className="flex justify-end m-5 mb-24">
+          <span className="px-4 py-2 mr-2 font-semibold rounded bg-cyan-700 text-white">{top100Podcasts.length}</span>
           <input
             onChange={({ target }) => filterPodcasts(target.value)}
-            className="pl-1"
+            className="pl-2"
             type="text"
             placeholder="Filter podcasts..."
           />
@@ -23,14 +24,21 @@ const Home = () => {
         {!top100Podcasts
           ? null
           : top100Podcasts.map((podcast) => {
+
+              const id = podcast.id.attributes["im:id"];
+              const title = podcast["im:name"].label;
+              const author = podcast["im:artist"].label;
+              const description = podcast.summary.label;
+              const imgUrl = podcast["im:image"][2].label;
+
               return (
                 <PodcastListCard
-                  key={podcast.id.attributes["im:id"]}
-                  id={podcast.id.attributes["im:id"]}
-                  title={podcast["im:name"].label}
-                  author={podcast["im:artist"].label}
-                  description={podcast.summary.label}
-                  imgUrl={podcast["im:image"][2].label}
+                  key={id}
+                  id={id}
+                  title={title}
+                  author={author}
+                  description={description}
+                  imgUrl={imgUrl}
                 />
               );
             })}
