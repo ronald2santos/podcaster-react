@@ -1,59 +1,15 @@
-import { useEffect, useState } from "react";
 import PodcastListCard from "../components/PodcastListCard";
-import { ALLOW_ORIGIN_URL, TOP_PODCASTS_URL } from "../constants";
+import { TOP_PODCASTS_URL } from "../constants";
 import { useLoading } from "../context/loadingContext";
-import { getExpirationDate } from "../services/DateFormatService";
-import { PodcastServerList } from "../types";
+import { usePodcastList } from "../hooks/usePodcastList";
 
 const Home = () => {
-  const [top100Podcasts, setTop100Podcasts] = useState<PodcastServerList[]>([]);
-
-  const { setLoading } = useLoading();
-
-  const getTopPodcasts = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(ALLOW_ORIGIN_URL + encodeURIComponent(TOP_PODCASTS_URL));
-      const results = await response.json();
-      const data = JSON.parse(results.contents);
-      const podcasts: PodcastServerList[] = data.feed.entry;
-      setTop100Podcasts(podcasts);
-      localStorage.setItem("topPodcasts", JSON.stringify(podcasts));
-      localStorage.setItem("listExpirationDate", getExpirationDate());
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filterPodcasts = (searchText: string) => {
-    const savedPodcasts: PodcastServerList[] = JSON.parse(localStorage.getItem("topPodcasts") || "[]");
-    if (searchText === "") {
-      setTop100Podcasts(savedPodcasts);
-    } else {
-      const filteredPodcasts: PodcastServerList[] = savedPodcasts.filter(
-        (podcast: any) => {
-          const title = podcast["im:name"].label.toLowerCase();
-          const author = podcast["im:artist"].label.toLowerCase();
-          return title.includes(searchText.toLowerCase()) || author.includes(searchText.toLowerCase())
-        }
-      );
-      setTop100Podcasts(filteredPodcasts);
-    }
-  };
-
-  useEffect(() => {
-    const expirationDateString = localStorage.getItem("listExpirationDate");
-    if (expirationDateString && new Date(expirationDateString) > new Date()) {
-      const savedPodcasts = JSON.parse(localStorage.getItem("topPodcasts") || "[]");
-      setTop100Podcasts(savedPodcasts);
-    } else { getTopPodcasts(); }
-  }, []);
-
+  const { top100Podcasts, filterPodcasts } = usePodcastList(TOP_PODCASTS_URL)
+  const { loading } = useLoading();
   return (
     <>
-      {!top100Podcasts ? null : (
+    {console.log(top100Podcasts)}
+      {!top100Podcasts || loading ? null : (
         <div className="flex justify-end m-5 mb-24">
           <input
             onChange={({ target }) => filterPodcasts(target.value)}

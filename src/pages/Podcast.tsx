@@ -1,59 +1,17 @@
-import { useEffect, useState } from "react";
+
 import { useLocation, useParams } from "react-router-dom";
 import EpisodeList from "../components/EpisodeList";
 import PodcastDetail from "../components/PodcastDetail";
-import { ALLOW_ORIGIN_URL } from "../constants";
-import { useLoading } from "../context/loadingContext";
-import { getExpirationDate } from "../services/DateFormatService";
-import { EpisodeServerData, PodcastParams, PodcastServerData } from "../types";
+import { usePodcastData } from "../hooks/usePodcastData";
+import { PodcastParams } from "../types";
 
 const Podcast = () => {
-  const [podcastData, setPodcastData] = useState<PodcastServerData>();
-  const [podcastEpisodes, setPodcastEpisodes] = useState<EpisodeServerData[]>();
   const { podcastId } = useParams<keyof PodcastParams>() as PodcastParams;
   const baseUrl = `https://itunes.apple.com/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`;
 
   /// Description value is not available in podcast data and episode list endpoint, so passing it as state from podcast top100 list data
   const { state } = useLocation();
-
-  const { setLoading } = useLoading();
-
-  const getPodcastData = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(ALLOW_ORIGIN_URL + encodeURIComponent(baseUrl));
-      const results = await response.json();
-      const data = JSON.parse(results.contents);
-      const podcastArray = data.results;
-      const localPodcast = {
-        podcast: podcastArray,
-        description: state.description,
-        expirationDate: getExpirationDate(),
-      };
-      localStorage.setItem(podcastId, JSON.stringify(localPodcast));
-      /// Podcast info data comes as the first element in the array of episodes
-      setPodcastData(podcastArray[0]);
-      /// We cut out the podcast data and we keep the episodes only
-      setPodcastEpisodes(podcastArray.slice(1, podcastArray.length));
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      setLoading(false)
-    }
-  };
-
-  useEffect(() => { 
-    const localPodcast = localStorage.getItem(podcastId);
-    const podcastExpirationDate = localPodcast ? JSON.parse(localPodcast).expirationDate : undefined;
-
-    if (localPodcast && new Date(podcastExpirationDate) > new Date()) {
-      const podcastArray = JSON.parse(localPodcast).podcast;
-      setPodcastData(podcastArray[0]);
-      setPodcastEpisodes(podcastArray.slice(1, podcastArray.length));
-    } else {
-        getPodcastData();
-    } 
-  }, [podcastId]);
+  const { podcastData , podcastEpisodes } = usePodcastData(baseUrl, state?.description, podcastId)
 
   return (
     <div>
