@@ -1,20 +1,9 @@
 import { EpisodeList as EpisodeListType } from "../types";
 import { Link } from "react-router-dom";
+import { formatDate, formatDuration } from "../services/DateFormatService";
 
 // Added podcastId prop to get podcast data from localStorage for next view in Episode Page
 const EpisodeList = ({ episodeList, episodeCount, podcastId }: EpisodeListType) => {
-  
-  const formatDate = (releaseDate: string): string => Intl.DateTimeFormat("en-US").format(new Date(releaseDate));
-  
-  // Comes in miliseconds
-  const formatDuration = (durationMs: number): string => {
-    const hours = (Math.floor(durationMs / 3600000) % 24).toString().padStart(2, "0");
-    const minutes = (Math.floor(durationMs / 60000) % 60).toString().padStart(2, "0");
-    const seconds = (Math.floor(durationMs / 1000) % 60).toString().padStart(2, "0");
-    if (hours === "00") return `${minutes}:${seconds}`;
-    return `${hours}:${minutes}:${seconds}`;
-  };
-
   return (
     <div className="m-10 text-xs lg:text-sm lg:w-3/4 2xl:text-base">
       <h2 className="text-lg lg:text-2xl font-bold mb-5 p-3 shadow-md">Episodes: {episodeCount}</h2>

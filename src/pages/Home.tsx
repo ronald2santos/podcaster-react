@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PodcastListCard from "../components/PodcastListCard";
 import { ALLOW_ORIGIN_URL, TOP_PODCASTS_URL } from "../constants";
 import { useLoading } from "../context/loadingContext";
+import { getExpirationDate } from "../services/DateFormatService";
 import { PodcastServerList } from "../types";
 
 const Home = () => {
@@ -24,13 +25,6 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getExpirationDate = () => {
-    const today = new Date();
-    const expirationDate = new Date();
-    expirationDate.setDate(today.getDate() + 1);
-    return expirationDate.toString();
   };
 
   const filterPodcasts = (searchText: string) => {

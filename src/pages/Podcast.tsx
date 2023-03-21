@@ -4,6 +4,7 @@ import EpisodeList from "../components/EpisodeList";
 import PodcastDetail from "../components/PodcastDetail";
 import { ALLOW_ORIGIN_URL } from "../constants";
 import { useLoading } from "../context/loadingContext";
+import { getExpirationDate } from "../services/DateFormatService";
 import { EpisodeServerData, PodcastParams, PodcastServerData } from "../types";
 
 const Podcast = () => {
@@ -16,13 +17,6 @@ const Podcast = () => {
   const { state } = useLocation();
 
   const { setLoading } = useLoading();
-
-  const getExpirationDate = () => {
-    const today = new Date();
-    const expirationDate = new Date();
-    expirationDate.setDate(today.getDate() + 1);
-    return expirationDate.toString();
-  };
 
   const getPodcastData = async () => {
     try {
