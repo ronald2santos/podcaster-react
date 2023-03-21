@@ -1,11 +1,11 @@
 import PodcastListCard from "../components/PodcastListCard";
 import { TOP_PODCASTS_URL } from "../constants";
-import { useLoading } from "../context/loadingContext";
+import { useDataContext } from "../context/DataContext";
 import { usePodcastList } from "../hooks/usePodcastList";
 
 const Home = () => {
   const { top100Podcasts, filterPodcasts } = usePodcastList(TOP_PODCASTS_URL);
-  const { loading } = useLoading();
+  const { loading } = useDataContext();
 
   return (
     <>

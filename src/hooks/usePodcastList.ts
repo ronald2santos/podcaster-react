@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import { getExpirationDate } from "../services/DateFormatService";
-import { useLoading } from "../context/loadingContext";
 import { PodcastServerList } from "../types";
 import { getTopPodcasts } from "../services/PodcastListService";
+import { useDataContext } from "../context/DataContext"
 
 export const usePodcastList = (query: string) => {
   const [top100Podcasts, setTop100Podcasts] = useState<PodcastServerList[]>([]);
-  const { setLoading } = useLoading();
+  const { setLoading, setError } = useDataContext();
 
   // Get data from api and set to local storage
   const cacheLocalPodcastList = async (query: string) => {
     setLoading(true);
+    setError(false);
     const podcastTop100List = await getTopPodcasts(query);
     setLoading(false);
-    if(!podcastTop100List) return
+    if (!podcastTop100List) {
+      setError(true);
+      return;
+    }
     /// Local Storage and Set State
     localStorage.setItem("topPodcasts", JSON.stringify(podcastTop100List));
     localStorage.setItem("listExpirationDate", getExpirationDate());

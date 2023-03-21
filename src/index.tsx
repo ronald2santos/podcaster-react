@@ -2,15 +2,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { LoadingProvider } from "./context/loadingContext";
+import { DataContextProvider } from "./context/DataContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <Router>
-    <LoadingProvider>
+    <DataContextProvider>
       <App />
-    </LoadingProvider>
+    </DataContextProvider>
   </Router>
 );

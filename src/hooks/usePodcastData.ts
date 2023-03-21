@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getExpirationDate } from "../services/DateFormatService";
 import { getPodcastData } from "../services/PodcastDataService"
 import { EpisodeServerData, PodcastServer, PodcastServerData } from "../types";
-import { useLoading } from "../context/loadingContext";
+import { useDataContext } from "../context/DataContext";
 
 export const usePodcastData = (
   query: string,
@@ -11,14 +11,18 @@ export const usePodcastData = (
 ) => {
   const [podcastData, setPodcastData] = useState<PodcastServerData>();
   const [podcastEpisodes, setPodcastEpisodes] = useState<EpisodeServerData[]>();
-  const { setLoading } = useLoading();
+  const { setLoading, setError } = useDataContext();
 
   const cacheLocalPodcast = async (query: string, description: string, podcastId: string) => {
     setLoading(true);
+    setError(false);
     // Call to PodcastDataService
     const podcastArray = await getPodcastData(query);
     setLoading(false);
-    if(!podcastArray) return
+    if (!podcastArray) {
+      setError(true);
+      return;
+    }
     /// Local Storage and Set State
     const localPodcast = {
       podcast: podcastArray,

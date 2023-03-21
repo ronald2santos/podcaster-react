@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useDataContext } from "../context/DataContext";
 
 const Error404 = () => {
+  const { setError } = useDataContext();
   return (
     <section className="flex items-center h-full p-16">
       <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
@@ -14,7 +16,7 @@ const Error404 = () => {
           <p className="mt-4 mb-8 dark:text-gray-400">
             But dont worry, you can find more podcasts in our homepage.
           </p>
-          <Link to="/" className="px-8 py-3 font-semibold rounded bg-cyan-700 text-white">
+          <Link onClick={() => setError(false)} to="/" className="px-8 py-3 font-semibold rounded bg-cyan-700 text-white">
             Back to homepage
           </Link>
         </div>
