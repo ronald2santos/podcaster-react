@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import PodcastListCard from "../components/PodcastListCard";
+import { ALLOW_ORIGIN_URL, TOP_PODCASTS_URL } from "../constants";
 import { useLoading } from "../context/loadingContext";
 import { PodcastServerList } from "../types";
 
 const Home = () => {
-  const allowOriginURL = "https://api.allorigins.win/get?url=";
-  const baseUrl = "https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json";
   const [top100Podcasts, setTop100Podcasts] = useState<PodcastServerList[]>([]);
 
   const { setLoading } = useLoading();
@@ -13,7 +12,7 @@ const Home = () => {
   const getTopPodcasts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
+      const response = await fetch(ALLOW_ORIGIN_URL + encodeURIComponent(TOP_PODCASTS_URL));
       const results = await response.json();
       const data = JSON.parse(results.contents);
       const podcasts: PodcastServerList[] = data.feed.entry;

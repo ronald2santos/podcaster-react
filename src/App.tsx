@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Podcast from "./pages/Podcast";
 import { useLoading } from "./context/loadingContext";
 import { Circles } from "react-loader-spinner";
+import { EPISODE_PAGE_ROUTE, PODCAST_PAGE_ROUTE } from "./constants";
 
 const App = () => {
   const { loading } = useLoading();
@@ -25,9 +26,9 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/podcast/:podcastId" element={<Podcast />} />
+        <Route path={PODCAST_PAGE_ROUTE} element={<Podcast />} />
         <Route
-          path="/podcast/:podcastId/episode/:episodeId"
+          path={PODCAST_PAGE_ROUTE + EPISODE_PAGE_ROUTE}
           element={<Episode />}
         />
       </Routes>

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import EpisodeList from "../components/EpisodeList";
 import PodcastDetail from "../components/PodcastDetail";
+import { ALLOW_ORIGIN_URL } from "../constants";
 import { useLoading } from "../context/loadingContext";
 import { EpisodeServerData, PodcastParams, PodcastServerData } from "../types";
 
 const Podcast = () => {
-  const allowOriginURL = "https://api.allorigins.win/get?url=";
   const [podcastData, setPodcastData] = useState<PodcastServerData>();
   const [podcastEpisodes, setPodcastEpisodes] = useState<EpisodeServerData[]>();
   const { podcastId } = useParams<keyof PodcastParams>() as PodcastParams;
@@ -27,7 +27,7 @@ const Podcast = () => {
   const getPodcastData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(allowOriginURL + encodeURIComponent(baseUrl));
+      const response = await fetch(ALLOW_ORIGIN_URL + encodeURIComponent(baseUrl));
       const results = await response.json();
       const data = JSON.parse(results.contents);
       const podcastArray = data.results;
