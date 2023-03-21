@@ -10,7 +10,7 @@ const App = () => {
   const { loading, error } = useDataContext();
   return (
     <>
-      <div className="flex justify-between m-10">
+      <div className="flex justify-between m-10 pb-2 border-b-2">
         <Link to={"/"}>
           <h1 className="text-2xl font-bold text-cyan-700">Podcaster</h1>
         </Link>
