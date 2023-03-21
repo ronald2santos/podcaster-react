@@ -5,6 +5,7 @@ import Podcast from "./pages/Podcast";
 import { useLoading } from "./context/loadingContext";
 import { Circles } from "react-loader-spinner";
 import { EPISODE_PAGE_ROUTE, PODCAST_PAGE_ROUTE } from "./constants";
+import Error404 from "./pages/Error404";
 
 const App = () => {
   const { loading } = useLoading();
@@ -31,6 +32,7 @@ const App = () => {
           path={PODCAST_PAGE_ROUTE + EPISODE_PAGE_ROUTE}
           element={<Episode />}
         />
+        <Route path="*" element={<Error404 />}></Route>
       </Routes>
     </>
   );
